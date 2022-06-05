@@ -16,6 +16,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Data\**" />
+	  <Compile Remove="Models\**" />
+	  <Content Remove="Data\**" />
+	  <Content Remove="Models\**" />
+	  <EmbeddedResource Remove="Data\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <None Remove="Data\**" />
+	  <None Remove="Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <AdditionalFiles Include="..\..\..\.sonarlint\aguacongas_theidserver\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
@@ -49,9 +60,5 @@
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Data\" />
-	  <Folder Include="Models\" />
 	</ItemGroup>
 </Project>

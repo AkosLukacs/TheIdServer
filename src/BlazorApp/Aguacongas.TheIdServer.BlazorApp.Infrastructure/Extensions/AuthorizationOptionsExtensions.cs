@@ -21,13 +21,16 @@ namespace Microsoft.AspNetCore.Authorization
                    policy.RequireAssertion(context => context.User.Identity.IsAuthenticated &&
                     context.User.IsInRole(SharedConstants.REGISTRATIONPOLICY)));
             options.AddPolicy(SharedConstants.TOKENPOLICY, policy =>
-                   policy.RequireAssertion(context => context.User.Identity.IsAuthenticated &&
-                    context.User.HasClaim(c => c.Type == JwtClaimTypes.ClientId) &&
-                    context.User.HasClaim(c => c.Type == JwtClaimTypes.Scope && c.Value == SharedConstants.TOKENSCOPES)));
-            AddSettingsPolicies(options, checkAdminsScope, showSettings);
+                   policy.RequireAuthenticatedUser()
+                    .RequireClaim(JwtClaimTypes.ClientId)
+                    .RequireClaim(JwtClaimTypes.Scope, SharedConstants.TOKENSCOPES));
+            if (showSettings)
+            {
+                AddSettingsPolicies(options, checkAdminsScope);
+            }
         }
 
-        private static void AddSettingsPolicies(AuthorizationOptions options, bool checkAdminsScope, bool showSettings)
+        private static void AddSettingsPolicies(AuthorizationOptions options, bool checkAdminsScope)
         {
             options.AddPolicy(SharedConstants.DYNAMIC_CONFIGURATION_WRITTER_POLICY, policy =>
                    policy.RequireAssertion(context => context.User.Identity.IsAuthenticated &&

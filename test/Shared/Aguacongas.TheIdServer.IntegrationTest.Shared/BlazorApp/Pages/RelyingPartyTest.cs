@@ -115,7 +115,7 @@ namespace Aguacongas.TheIdServer.IntegrationTest.BlazorApp.Pages
             await DbActionAsync<ConfigurationDbContext>(async context =>
             {
                 var relyingParty = await context.RelyingParties.FirstOrDefaultAsync(a => a.Id == relyingPartyId);
-                Assert.Equal(expected, relyingParty.Description);
+                Assert.Equal(expected, relyingParty?.Description);
             });
         }
 
