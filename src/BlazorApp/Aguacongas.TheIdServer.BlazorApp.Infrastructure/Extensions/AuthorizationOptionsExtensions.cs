@@ -26,11 +26,11 @@ namespace Microsoft.AspNetCore.Authorization
                     .RequireClaim(JwtClaimTypes.Scope, SharedConstants.TOKENSCOPES));
             if (showSettings)
             {
-                AddSettingsPolicies(options, checkAdminsScope);
+                AddSettingsPolicies(options, checkAdminsScope, showSettings);
             }
         }
 
-        private static void AddSettingsPolicies(AuthorizationOptions options, bool checkAdminsScope)
+        private static void AddSettingsPolicies(AuthorizationOptions options, bool checkAdminsScope, bool showSettings)
         {
             options.AddPolicy(SharedConstants.DYNAMIC_CONFIGURATION_WRITTER_POLICY, policy =>
                    policy.RequireAssertion(context => context.User.Identity.IsAuthenticated &&
