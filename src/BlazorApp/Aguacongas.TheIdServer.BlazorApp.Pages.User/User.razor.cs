@@ -22,15 +22,16 @@ namespace Aguacongas.TheIdServer.BlazorApp.Pages.User
         {
             return Task.FromResult(new Models.User
             {
-                Claims = new List<entity.UserClaim>(),
-                Consents = new List<entity.UserConsent>(),
-                Logins = new List<entity.UserLogin>(),
-                Roles = new List<entity.Role>(),
-                Tokens = new List<entity.UserToken>(),
-                ReferenceTokens = new List<entity.ReferenceToken>(),
-                RefreshTokens = new List<entity.RefreshToken>(),
-                BackChannelAuthenticationRequests = new List<entity.BackChannelAuthenticationRequest>(),
-                Sessions = new List<entity.UserSession>()
+                Id = Guid.NewGuid().ToString(),
+                Claims = new List<EntityNS.UserClaim>(),
+                Consents = new List<EntityNS.UserConsent>(),
+                Logins = new List<EntityNS.UserLogin>(),
+                Roles = new List<EntityNS.Role>(),
+                Tokens = new List<EntityNS.UserToken>(),
+                ReferenceTokens = new List<EntityNS.ReferenceToken>(),
+                RefreshTokens = new List<EntityNS.RefreshToken>(),
+                BackChannelAuthenticationRequests = new List<EntityNS.BackChannelAuthenticationRequest>(),
+                Sessions = new List<EntityNS.UserSession>()
             });
         }
 
@@ -138,7 +139,15 @@ namespace Aguacongas.TheIdServer.BlazorApp.Pages.User
             return base.DeleteAsync(entityType, entity);
         }
 
-        private static entity.UserClaim CreateClaim()
+        protected override void OnCloning()
+        {
+            Model.Id = Guid.NewGuid().ToString();
+            Model.UserName = Localizer["Clone of {0}", Model.UserName];
+        }
+
+        protected override string GetNotiticationHeader() => Model.UserName;
+
+        private static EntityNS.UserClaim CreateClaim()
             => new()
             {
                 Issuer = ClaimsIdentity.DefaultIssuer
