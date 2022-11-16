@@ -57,9 +57,10 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
                 })
                 .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount, ClaimsPrincipalFactory>();
 
-            services.Configure<MenuOptions>(options => configuration.GetSection(nameof(MenuOptions)).Bind(options))
-                .AddScoped<dn.ConfigurationService>()
-                .AddScoped<dn.IConfigurationService, ConfigurationService>()
+            services.Configure<Settings>(options => configuration.Bind(options))
+                .Configure<MenuOptions>(options => configuration.GetSection(nameof(MenuOptions)).Bind(options))
+                .AddScoped<DynamicConfiguration.ConfigurationService>()
+                .AddScoped<DynamicConfiguration.IConfigurationService, ConfigurationService>()
                 .AddConfigurationService(configuration.GetSection("settingsOptions"))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
