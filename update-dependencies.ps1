@@ -5,9 +5,17 @@ function UpdatePackages {
     )
 
     $return = $false
+
+    if ($project -eq "src\IdentityServer\Aguacongas.IdentityServer.Store\Aguacongas.IdentityServer.Store.csproj") {
+        return $false
+    }
+
+    if ($project -eq "src\Aguacongas.TheIdServer\Aguacongas.TheIdServer.csproj") {
+        return $false
+    }
     
     # Get outdated packages
-    $packageLineList = dotnet list $project package --outdated
+    $packageLineList = dotnet list $project package --outdated --highest-patch
     
     foreach($line in $packageLineList) {
        Write-Host $line

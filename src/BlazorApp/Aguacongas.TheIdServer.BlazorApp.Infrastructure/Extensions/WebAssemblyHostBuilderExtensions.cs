@@ -17,7 +17,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Entity = Aguacongas.IdentityServer.Store.Entity;
-using dn = Aguacongas.DynamicConfiguration.Razor.Services;
+using DynamicConfiguration = Aguacongas.DynamicConfiguration.Razor.Services;
 
 namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
 {
