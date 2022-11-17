@@ -8,8 +8,6 @@ using Aguacongas.TheIdServer.BlazorApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
@@ -93,22 +91,6 @@ namespace Aguacongas.TheIdServer.BlazorApp.Pages
             Localizer.OnResourceReady = () => InvokeAsync(StateHasChanged);
             HandleModificationState = new HandleModificationState(Logger);
             HandleModificationState.OnStateChange += HandleModificationState_OnStateChange;
-
-            _registration ??= NavigationManager.RegisterLocationChangingHandler(async context =>
-            {
-                if (!EditContext.IsModified() && !Clone)
-                {
-                    return;
-                }
-
-                var isConfirmed = await JSRuntime.InvokeAsync<bool>("window.confirm", Localizer["Are you sure you want to leave this page?"]?.ToString())
-                    .ConfigureAwait(false);
-
-                if (!isConfirmed)
-                {
-                    context.PreventNavigation();
-                }
-            });
 
             if (Id is null)
             {
@@ -450,28 +432,6 @@ namespace Aguacongas.TheIdServer.BlazorApp.Pages
 
             var store = GetStore(entityType);
             return action.Invoke(store, entity);
-        }
-
-        
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _registration?.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
