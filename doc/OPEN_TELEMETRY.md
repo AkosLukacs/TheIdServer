@@ -70,8 +70,7 @@ Each part can be configurd using the `Instrumentation` node.
     "Trace": {
       "Instrumentation": {
         "HttpClient": {
-          "RecordException": true,
-          "SetHttpFlavor": true        
+          "RecordException": true      
         }
       }
     }

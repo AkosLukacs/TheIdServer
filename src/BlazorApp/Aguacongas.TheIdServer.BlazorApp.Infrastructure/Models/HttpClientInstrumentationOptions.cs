@@ -4,13 +4,6 @@
     {
         //
         // Summary:
-        //     Gets or sets a value indicating whether or not the HTTP version should be added
-        //     as the OpenTelemetry.Trace.SemanticConventions.AttributeHttpFlavor tag. Default
-        //     value: False.
-        public bool SetHttpFlavor { get; set; }
-
-        //
-        // Summary:
         //     Gets or sets a value indicating whether exception will be recorded as ActivityEvent
         //     or not.
         //
