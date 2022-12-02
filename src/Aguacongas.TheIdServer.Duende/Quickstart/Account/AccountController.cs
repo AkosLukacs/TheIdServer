@@ -360,13 +360,10 @@ namespace Aguacongas.TheIdServer.UI
 
                     if (providerSupportsSignout)
                     {
-                        if (vm.LogoutId == null)
-                        {
-                            // if there's no current logout context, we need to create one
-                            // this captures necessary info from the current logged in user
-                            // before we signout and redirect away to the external IdP for signout
-                            vm.LogoutId = await _interaction.CreateLogoutContextAsync().ConfigureAwait(false);
-                        }
+                        // if there's no current logout context, we need to create one
+                        // this captures necessary info from the current logged in user
+                        // before we signout and redirect away to the external IdP for signout
+                        vm.LogoutId ??= await _interaction.CreateLogoutContextAsync().ConfigureAwait(false);
 
                         vm.ExternalAuthenticationScheme = idp;
                     }

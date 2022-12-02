@@ -1,6 +1,7 @@
 ﻿// Project: Aguafrommars/TheIdServer
 // Copyright (c) 2022 @Olivier Lefebvre
 using Aguacongas.AspNetCore.Authentication;
+using Aguacongas.DynamicConfiguration.Razor.Options;
 using Aguacongas.IdentityServer.Admin.Http.Store;
 using Aguacongas.IdentityServer.Store;
 using Aguacongas.TheIdServer.BlazorApp.Infrastructure.Services;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -67,12 +69,24 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
                 })
                 .AddAccountClaimsPrincipalFactory<ClaimsPrincipalFactory>();
 
-            services.Configure<Settings>(options => configuration.Bind(options))
+            services.Configure<Settings>(configuration.Bind)
                 .Configure<MenuOptions>(options => configuration.GetSection(nameof(MenuOptions)).Bind(options))
+                .AddTransient(p =>
+                {
+                    var settingsOptions = p.GetRequiredService<IOptions<SettingsOptions>>().Value;
+                    var handler = new AuthorizationMessageHandler(p.GetRequiredService<IAccessTokenProvider>(),
+                        p.GetRequiredService<NavigationManager>());
+                    handler.ConfigureHandler(new[]
+                    {
+                        settings.ApiBaseUrl,
+                        settingsOptions.ApiUrl
+                    });
+                    return handler;
+                })
                 .AddScoped<DynamicConfiguration.ConfigurationService>()
                 .AddScoped<DynamicConfiguration.IConfigurationService, ConfigurationService>()
                 .AddConfigurationService(configuration.GetSection("settingsOptions"))
-                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+                .AddHttpMessageHandler<AuthorizationMessageHandler>();
 
             services.AddAuthorizationCore(options =>
             {
@@ -90,7 +104,7 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
                     var apiUri = new Uri(settings.ApiBaseUrl);
                     httpClient.BaseAddress = apiUri;
                 })
-                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+                .AddHttpMessageHandler<AddressListAuthorizationMessageHandler>();
 
             services.AddScoped<ISharedStringLocalizerAsync, StringLocalizer>()
                 .AddTransient<IReadOnlyLocalizedResourceStore>(p =>
